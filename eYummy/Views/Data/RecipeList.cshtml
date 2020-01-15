@@ -1,0 +1,701 @@
+﻿@model eYummy.Models.ViewModels.RecipesListViewModel
+
+
+
+<div class="wrapper">
+
+    <div class="page-header clear-filter page-header-small" filter-color="orange">
+        <div class="page-header-image" data-parallax="true" style="background-image:url('../assets/img/bg5.jpg');">
+        </div>
+        <div class="container">
+            <div class="photo-container">
+                <img src="../../assets/img/now-logo.png" alt="">
+            </div>
+            <h3 class="title">NEUAVENUE BEAUTIFUL RECIPE</h3>
+            <p class="category">Recipe List</p>
+            <div class="content">
+
+                <div class="social-description">
+                    <h2>26</h2>
+                    <p>Kid-Friendly Recipes</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="container">
+            <div class="button-container">
+                <a href="#button" class="btn btn-primary btn-round btn-lg">Follow</a>
+                <a href="#button" class="btn btn-default btn-round btn-lg btn-icon" rel="tooltip" title="Follow me on Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#button" class="btn btn-default btn-round btn-lg btn-icon" rel="tooltip" title="Follow me on Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+            <h3 class="title">Recipe List</h3>
+            <h5 class="description">
+                Kid-Friendly Recipes are inspiration and ideas for kids with Kids's Chicken,
+                Pork, Pasta, Beef, Pizza, Vegetable and Fish. We have seasonal food recipes and various ingredient. Furthermore, there are lots of special collections : All recipe Magazine Recipes and Food Wishes with Chef John.
+            </h5>
+
+            <!-- Table -->
+
+            <table class="table">
+                <thead>
+                    <tr>
+
+                        <th class="text-center">Recipe ID </th>
+                        <th>RecipeName</th>
+                        <th>Category</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Recipe reci in Model.Recipes)
+                    {
+                        Model.Recipe.RecipeId = reci.RecipeId;
+                        Model.Recipe.RecipeTitle = reci.RecipeTitle;
+                        Model.Recipe.CategoryId = reci.CategoryId;
+                        Model.Recipe.FileToUpload = reci.FileToUpload;
+                        Model.Recipe.Description = reci.Description;
+                        Model.Recipe.Prep = reci.Prep;
+                        Model.Recipe.Servings = reci.Servings;
+                        Model.Recipe.ServingsMax = reci.ServingsMax;
+                        Model.Recipe.Total = reci.Total;
+                        Model.Recipe.Yield = reci.Yield;
+                        Model.Recipe.CookTime = reci.CookTime;
+                        Model.Recipe.DateTimeUpdate = reci.DateTimeUpdate;
+
+
+
+                        <tr>
+
+                            <td class="text-center">@Model.Recipe.RecipeId</td>
+                            <td>@Model.Recipe.RecipeTitle </td>
+                            <td>
+
+
+                                @foreach (Category category in Model.Categories)
+                                {
+                                    @if (Model.Recipe.CategoryId == category.CategoryId)
+                                    {
+                                        @category.CategoryName
+
+                                    }
+
+                                }
+
+                            </td>
+
+
+                            <td class="td-actions text-right">
+
+
+                                @foreach (RecipeModal recipeModal in Model.RecipeModals)
+                                {
+                                    @if (Model.Recipe.RecipeId == recipeModal.RecipeId)
+                                    {
+
+                                        @foreach (ModalDetail modalDetail in Model.ModalDetails)
+                                        {
+                                            if (recipeModal.ModalId == modalDetail.ModalId)
+                                            {
+
+                                                @if (recipeModal.ModalId == 1)
+                                                {
+
+                                                    <!-- Button trigger modal -->
+                                                    <button type="button" class="btn btn-info" data-toggle="modal"
+                                                            data-target="@modalDetail.DataTarget@Model.Recipe.RecipeId">
+                                                        Edit
+                                                    </button>
+
+
+                                                    <div class="modal fade" id="@modalDetail.ModalName@Model.Recipe.RecipeId" tabindex="-1"
+                                                         role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+
+
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="viewModalLabel">RECIPE EDIT</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+
+                                                                </div>
+
+
+                                                                <!--Modal Body-->
+                                                                <form name="Update" asp-controller="Data" asp-action="EditRecipe" method="post" enctype="multipart/form-data">
+                                                                    <div class="modal-body">
+
+                                                                        <hr>
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">ID</label>
+                                                                            <div class="col-sm-10">
+                                                                                <textarea class="form-control" asp-for="@Model.Recipe.RecipeId" rows="1" readonly></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Name</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <textarea class="form-control" asp-for="@Model.Recipe.RecipeTitle" rows="1"></textarea>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Update Time</label>
+                                                                            <div class="col-sm-10">
+                                                                                @Model.Recipe.DateTimeUpdate
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Category</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <select class="form-control" data-style="select-with-transition btn-primary btn-round"
+                                                                                        title="Category" asp-for="@Model.Recipe.CategoryId" data-size="8">
+
+
+                                                                                    @foreach (Category category in Model.Categories)
+                                                                                    {
+                                                                                        @if (Model.Recipe.CategoryId.Equals(category.CategoryId))
+                                                                                        {
+                                                                                            <option value="@Model.Recipe.CategoryId" selected> @category.CategoryName</option>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <option value="@category.CategoryId"> @category.CategoryName</option>
+                                                                                        }
+                                                                                    }
+
+                                                                                </select>
+
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Images</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                                                    <div class="fileinput-preview img-thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                                                                                        <img class="d-block" src="@Model.Recipe.FileToUpload" />
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <span class="btn btn-outline-secondary btn-file">
+                                                                                            <span class="fileinput-new">Select image</span>
+                                                                                            <span class="fileinput-exists">Change</span>
+                                                                                            <input type="file" id="FileToUpload" name="FileToUpload"
+                                                                                                   asp-for="@Model.Recipe.FileToUpload" multiple
+                                                                                                   accept="wwwroot/assets/imag/RecipeList/*" />
+                                                                                        </span>
+                                                                                        <a href="#" class="btn btn-outline-secondary fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                                                    </div>
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Descri-ption</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <textarea class="form-control" asp-for="@Model.Recipe.Description" rows="3"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="comment" class="col-sm-2 col-form-label">Ingre-dients</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                @for( int i = 0; i < Model.ChangedIngredientDetails.Count() ; i++)
+                                                                                {
+                                                                                    if(Model.ChangedIngredientDetails[i].RecipeId == Model.Recipe.RecipeId)
+                                                                                    {
+                                                                                        <textarea class="form-control" asp-for="@Model.ChangedIngredientDetails[i].IngredientId" rows ="1"></textarea>
+                                                                                        <textarea class="form-control" asp-for="@Model.ChangedIngredientDetails[i].IngredientString" rows ="1"></textarea>
+                                                                                    }
+                                                                                }
+
+                                                                                <!-- PUt in data-->
+                                                                                @*{
+                                                                                    int i = 0;
+                                                                                    Model.UpdateIngredientDetailDic = new Dictionary<int, string>();
+                                                                                }
+
+
+                                                                                @*for (int j = 0; j < Model.AllRecipeIngredients.Where(ari => ari.RecipeId == Model.Recipe.RecipeId).Count(); j++)
+                                                                                {
+
+                                                                                    Model.UpdateRecipeIngredient = Model.AllRecipeIngredients
+                                                                                                        .Where(ari => ari.RecipeId == Model.Recipe.RecipeId).ToList<RecipeIngredient>();
+
+                                                                                    
+
+                                                                                    Model.UpdateIngredientDetail = Model.AllIngredientDetail.Where(aid => aid.IngredientId == 
+                                                                                                            Model.UpdateRecipeIngredient[j].IngredientId).ToList<IngredientDetail>();
+                                                                                    
+
+                                                                                    
+
+                                                                                    IngredientDetail ingredientDetail = new IngredientDetail();
+                                                                                    ingredientDetail.IngredientId = Model.UpdateRecipeIngredient[j].IngredientId;
+                                                                                    ingredientDetail.IngredientString = Model.UpdateIngredientDetail[0].IngredientString;
+
+                                                                                    //Model.ChangedIngredientDetai
+
+                                                                                    // Model.UpdateIngredientDetail.Insert(j, ingredientDetail);
+                                                                                    Model.UpdateIngredientDetailDic.Add(Model.UpdateRecipeIngredient[j].IngredientId, 
+                                                                                                                            Model.UpdateIngredientDetail[0].IngredientString);
+
+                                                                                    ++i;
+
+                                                                                }
+                                                                                *@
+
+
+                                                                                @*for (int index = 0; index < Model.UpdateIngredientDetailDic.Count(); index++)
+                                                                                {
+                                                                                    var item = Model.UpdateIngredientDetailDic.ElementAt(index);
+                                                                                    var itemkey = item.Key;
+                                                                                    var itemValue = item.Value;
+
+
+                                                                                    Model.UpdateIngredientDetail[0].IngredientId = itemkey;
+                                                                                    Model.UpdateIngredientDetail[0].IngredientString = itemValue;
+                                                                                    <input type="hidden" class="form-control" asp-for="@Model.UpdateIngredientDetail[0].IngredientId"  rows ="1"/>
+                                                                                    <textarea class="form-control" asp-for="@Model.UpdateIngredientDetail[0].IngredientString"  rows ="1"></textarea>
+                                                                                    
+                                                                                }
+                                                                                *@
+
+                                                                                </div>
+                                                                        </div>
+
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="viewModalLabel">Recipe Times (min.)</h5>
+
+                                                                        </div>
+                                                                        <hr />
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Prep:</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <textarea class="form-control" asp-for="@Model.Recipe.Prep" rows="1"></textarea>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Servings:</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <textarea class="form-control" asp-for="@Model.Recipe.Servings" rows="1"></textarea>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">CookTime:</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <textarea class="form-control" asp-for="@Model.Recipe.CookTime" rows="1"></textarea>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Servings-Max:</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <textarea class="form-control" asp-for="@Model.Recipe.ServingsMax" rows="1"></textarea>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Total:</label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <textarea class="form-control" asp-for="@Model.Recipe.Total" rows="1"></textarea>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row text-left">
+                                                                            <label for="rating" class="col-sm-2 col-form-label">Yield: </label>
+                                                                            <div class="col-sm-10">
+
+                                                                                <textarea class="form-control" asp-for="@Model.Recipe.Yield" rows="1"></textarea>
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+                                                                    </div>
+
+                                                                    <!-- End of Modal Body-->
+
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-secondary">Save</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                }
+
+                                                else if (recipeModal.ModalId == 3)
+                                                {
+
+                                                    <!-- Button trigger modal -->
+                                                    <button type="button" class="btn btn-success" data-toggle="modal"
+                                                            data-target="@modalDetail.DataTarget@Model.Recipe.RecipeId">
+                                                        View
+                                                    </button>
+
+                                                    <!-- Modal of User page (Ratings/Comments/Editing/Reviews) -->
+
+
+                                                    <div class="modal fade" id="@modalDetail.ModalName@Model.Recipe.RecipeId" tabindex="-1"
+                                                         role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+
+
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="viewModalLabel">RECIPE USER</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+
+                                                                </div>
+
+
+                                                                <!--Modal Body-->
+
+                                                                <div class="modal-body">
+
+                                                                    <hr>
+
+
+
+                                                                    <div class="form-group row text-left">
+                                                                        <label for="rating" class="col-sm-2 col-form-label">ID</label>
+                                                                        <div class="col-sm-10">
+
+                                                                            @Model.Recipe.RecipeId
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row text-left">
+                                                                        <label for="rating" class="col-sm-2 col-form-label">Name</label>
+                                                                        <div class="col-sm-10">
+                                                                            @Model.Recipe.RecipeTitle
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row text-left">
+                                                                        <label for="rating" class="col-sm-2 col-form-label">Update Time</label>
+                                                                        <div class="col-sm-10">
+                                                                            @Model.Recipe.DateTimeUpdate
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group row text-left">
+                                                                        <label for="rating" class="col-sm-2 col-form-label">Category</label>
+                                                                        <div class="col-sm-10">
+                                                                            @foreach (Category category in Model.Categories)
+                                                                            {
+                                                                                @if (Model.Recipe.CategoryId == category.CategoryId)
+                                                                                {
+                                                                                    @category.CategoryName
+
+                                                                                }
+
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                    <div class="form-group row text-left">
+                                                                        <label for="rating" class="col-sm-2 col-form-label">Images</label>
+                                                                        <div class="col-sm-10">
+                                                                            <!-- Recipe Image -->
+
+                                                                            <img class="d-block" src="@Model.Recipe.FileToUpload">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group row text-left">
+                                                                        <label for="rating" class="col-sm-2 col-form-label">Descri-ption</label>
+                                                                        <div class="col-sm-10">
+                                                                            @Model.Recipe.Description
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row text-left">
+                                                                        <label for="comment" class="col-sm-2 col-form-label">Ingre-dients</label>
+                                                                        <div class="col-sm-10">
+                                                                            <!-- PUt in data-->
+
+                                                                            @foreach (RecipeIngredient recipeIngredient in Model.RecipeIngredients)
+                                                                            {
+                                                                                if (Model.Recipe.RecipeId == recipeIngredient.RecipeId)
+                                                                                {
+                                                                                    @foreach (IngredientDetail ingredientDetail in Model.IngredientDetails)
+                                                                                    {
+                                                                                        if (recipeIngredient.IngredientId == ingredientDetail.IngredientId)
+                                                                                        {
+                                                                                            @ingredientDetail.IngredientString
+                                                                                            <br>
+                                                                                            <br>
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div id="inputs">
+                                                                        <h5 class="text-left">Recipe Times</h5>
+                                                                        <hr />
+                                                                        <div class="row">
+
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+
+                                                                                    <div class="input-group-append">
+                                                                                        Prep:
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+                                                                                    @Model.Recipe.Prep mins
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+
+                                                                                    <div class="input-group-append">
+                                                                                        Servings:
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+                                                                                    @Model.Recipe.Servings mins
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+
+                                                                                    <div class="input-group-append">
+                                                                                        Cook:
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+                                                                                    @Model.Recipe.CookTime mins
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+
+                                                                                    <div class="input-group-append">
+                                                                                        Servings(M):
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+                                                                                    @Model.Recipe.ServingsMax mins
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+
+                                                                                    <div class="input-group-append">
+                                                                                        Total :
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+                                                                                    @Model.Recipe.Total mins
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+
+                                                                                    <div class="input-group-append">
+                                                                                        Yield :
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6 col-lg-3">
+                                                                                <div class="input-group">
+                                                                                    @Model.Recipe.Yield mins
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <!-- End of Modal Body-->
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                }
+                                                else if (recipeModal.ModalId == 2)
+                                                {
+                                                    <!-- End of Modal -->
+
+                                                    <!-- Button Delete trigger modal -->
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                            data-target="@modalDetail.DataTarget@Model.Recipe.RecipeId">
+                                                        Delete
+                                                    </button>
+
+
+
+
+
+                                                    <!-- Modal of User page (Ratings/Comments/Editing/Reviews) -->
+                                                    <div class="modal fade" id="@modalDetail.ModalName@Model.Recipe.RecipeId" tabindex="-1"
+                                                         role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="deleteModalLabel">RECIPE DELETE</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+
+                                                                </div>
+
+
+                                                                <!--Modal Body-->
+
+                                                                <div class="modal-body">
+
+                                                                    <hr>
+                                                                    <p class="text-left">Recipe ID : @Model.Recipe.RecipeId </p>
+
+                                                                    <div class="alert alert-danger text-left" role="alert">
+                                                                        This is a danger delete alert with
+                                                                        <a href="#" class="alert-link">Recipe ID : @Model.Recipe.RecipeId / Recipe Name :  @Model.Recipe.RecipeTitle </a>.
+                                                                        <br />
+                                                                        Click the delete button below if you would like to delete.
+                                                                    </div>
+
+                                                                </div>
+
+
+                                                                <!-- End of Modal Body-->
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    <form method="get">
+
+                                                                        <button type="submit" asp-action="DeleteRecipe" asp-controller="Data" asp-route-id="@Model.Recipe.RecipeId" class="btn btn-secondary">Delete</button>
+                                                                    </form>
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End of Modal -->
+
+
+
+                                                }
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
+
+                            </td>
+                        </tr>
+                    }
+
+
+
+
+
+                </tbody>
+            </table>
+
+
+            <!-- End table-->
+            <!-- Pagination -->
+
+
+            <nav aria-label="...">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active">
+                        <span class="page-link">
+                            2
+                            <span class="sr-only">(current)</span>
+                        </span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- End of Pagination -->
+
+        </div>
+    </div>
+</div>
+
+
+
