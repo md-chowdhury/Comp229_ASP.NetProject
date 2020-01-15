@@ -8,6 +8,7 @@ namespace eYummy.Models.CategoryModels
 {
     public class Category
     {
+        //Properties
         public int CategoryId { get; set; }
         public string CategoryName { set; get; }
         public string CategoryImg { set; get; }
